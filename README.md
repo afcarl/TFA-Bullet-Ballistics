@@ -60,7 +60,7 @@ That's all you have to do to get this up and running! Do not use on projectile b
 3. Proper bullet drop using verlet integration ( Done )
 
 # Bugs
-* Non Currently
+* None Currently
 
 Please report other bugs [here](https://github.com/Daxble/TFA-Bullet-Ballistics/issues) if possible.
 
