@@ -1,15 +1,16 @@
 # TFA Bullet Ballistics
-**TFA Bullet Ballistics** is a full ballistics system in Garry's Mod for [TFA Base](https://steamcommunity.com/sharedfiles/filedetails/?id=415143062). Instead of firing hitscan bullets that require no skill at all, you can instead shoot bullets impacted by gravity, etc. I tried to optimize it as well as I could with my knowledge, all calculations regarding bullets are done serverside. If you would like a feature you can request it [here](https://github.com/Daxble/TFA-Bullet-Ballistics/issues) or make it yourself and submit it [here](https://github.com/Daxble/TFA-Bullet-Ballistics/pulls).
+**TFA Bullet Ballistics** is a full ballistics system in Garry's Mod for [TFA Base](https://steamcommunity.com/sharedfiles/filedetails/?id=415143062). Instead of firing hitscan bullets, you can instead shoot bullets impacted by gravity, wind, etc. It's fairly well optimized considering the complexity of the addon. If you would like a feature you can request it [here](https://github.com/Daxble/TFA-Bullet-Ballistics/issues) or make it yourself and submit it [here](https://github.com/Daxble/TFA-Bullet-Ballistics/pulls).
 
 # Features
 
-* Should work with all bullet based weapons
+* Should work with all TFA weapons.
 * All bullets calculated serverside
 * Bullet Drop
 * Scales with gravity ( Above 0 )
 * Wind ( If StormFox is installed )
 * Tracers
 * Bullet Cracks
+* Weapons automatically patched.
 
 # FAQ
 Q. It doesn't seem like it's working up close?  
@@ -24,7 +25,7 @@ A. This aims to simulate real bullets, not Battlefield bullets.
 ___
 
 Q. Why isn't my weapon using the bullets?  
-A. You need to do the setup for **Every** weapon that needs ballistics
+A. The patcher didn't pick up the weapon, please report the weapon to us and we will try and fix it.
 
 # Server Owners / Singleplayer
 
@@ -32,32 +33,14 @@ A. You need to do the setup for **Every** weapon that needs ballistics
 2. Extract the *TFA-Bullet-Ballistics-master* folder to your addons folder  
 3. Install [StormFox](https://steamcommunity.com/sharedfiles/filedetails/?id=1132466603) if you want wind to affect bullets  
 
-* **This is assuming you already have weapons that require this, if you do not please continue below.**  
-* **Players will need to download the sounds**
-
-# SWEP Developers
-
-1. Download the addon as a zip
-2. Extract the *TFA-Bullet-Ballistics-master* folder to your addons folder
-
-**The following steps need to be completed for each weapon that will use ballistics**
-
-3. Change the SWEP base to "tfa_ballistic_base"
-```lua
-SWEP.Base = "tfa_ballistic_base"
-```
-4. Place the following lines somewhere in your weapon
-```lua
-SWEP.Primary.Velocity = 760 // Weapon's muzzle velocity in meters, change to whatever you would like. ( Defaults to 500 )
-SWEP.TracerColor = Color( 255, 0, 0, 255 ) // Choose whatever color you would like, set alpha to zero to disable. ( Shotguns shouldn't have tracers ever. )
-```
-
-That's all you have to do to get this up and running! Do not use on projectile based weapons such as grenades or rockets, they will just shoot bullets instead.
+* **Players will need to download the sounds from the server or workshop.**
 
 # To Do
 1. Fix bugs ( Always in Progress )
 2. Add wind system ( Using StormFox )
 3. Proper bullet drop using verlet integration ( Done )
+4. Patcher ( Done )
+5. Workshop ( Done )
 
 # Bugs
 * None Currently
@@ -65,11 +48,11 @@ That's all you have to do to get this up and running! Do not use on projectile b
 Please report other bugs [here](https://github.com/Daxble/TFA-Bullet-Ballistics/issues) if possible.
 
 # Credits
-TFA - Helping with bullet drop and velocity code  
-YuRaNnNzZZ - Extensive testing and a lot help.  
-Kiwi, elwolf6, Amisaddai - FPS benchmarking  
-Matsilagi - Various help  
 Daxble - Coding this thing  
+YuRaNnNzZZ - Patcher code, extensive testing, and a lot help.  
+TFA - Helping with bullet drop and velocity code  
+Matsilagi - Various help  
+Kiwi, elwolf6, Amisaddai - FPS benchmarking  
 
 # License
 
