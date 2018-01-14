@@ -2,7 +2,40 @@ TFA_BALLISTICS = TFA_BALLISTICS or {}
 
 TFA_BALLISTICS.Bullets = TFA_BALLISTICS.Bullets or {}
 
-TFA_BALLISTICS.AddBullet = function(damage, velocity, pos, dir, owner, ang, weapon, tracerenabled, tracercolor )
+TFA_BALLISTICS.AmmoNames = {}
+
+TFA_BALLISTICS.AmmoVelocity = {}
+
+TFA_BALLISTICS.RegisterAmmoType = function( ammotype, velocity )
+	if isstring( ammotype ) then
+		table.insert( TFA_BALLISTICS.AmmoNames, ammotype )
+	else
+		Error( "[TFA Ballistics] Error registering ammotype UNKNOWN, ammotype must be a string. \n" )
+	end
+	if isnumber( velocity ) then
+		table.insert( TFA_BALLISTICS.AmmoVelocity, velocity )
+	else
+		Error( "[TFA Ballistics] Error registering ammotype " .. ammotype .. ", velocity must be a number. \n" )
+	end
+end
+
+TFA_BALLISTICS.RegisterAmmoType( "pistol", 350 )
+TFA_BALLISTICS.RegisterAmmoType( "357", 466 )
+TFA_BALLISTICS.RegisterAmmoType( "smg1", 450 )
+TFA_BALLISTICS.RegisterAmmoType( "ar2", 600 )
+TFA_BALLISTICS.RegisterAmmoType( "buckshot", 400 )
+TFA_BALLISTICS.RegisterAmmoType( "SniperPenetratedRound", 760 )
+
+if not ConVarExists( "tfa_ballistics_windinfo" ) then
+	local convarflags = {
+		FCVAR_ARCHIVE,
+		FCVAR_SERVER_CAN_EXECUTE,
+		FCVAR_NOTIFY
+	}
+	CreateConVar( "tfa_ballistics_windinfo", 1, convarflags, "Enables or disables wind info HUD on ballistics weapons, This can only be changed serverside." )
+end
+
+TFA_BALLISTICS.AddBullet = function( damage, velocity, pos, dir, owner, ang, weapon, tracerenabled, tracercolor )
 
 	if SERVER then
 		local bulletent
@@ -51,7 +84,7 @@ if SERVER then
 
 		if not IsFirstTimePredicted() then return end
 
-		if not IsValid( bullet["weapon"] ) then
+		if not IsValid( bullet["weapon"] ) or not IsValid( bullet["owner"] ) then
 			table.RemoveByValue( TFA_BALLISTICS.Bullets, bullet )
 			return false
 		end
@@ -226,11 +259,6 @@ else
 	net.Receive( "TFA_BALLISTICS_StopParticles", function ()
 		local ent = net.ReadEntity()
 		ent:StopParticles()
-	end)
-
-	net.Receive( "TFA_BALLISTICS_SendWindSpeed", function ()
-		local windspeed = net.ReadInt( 32 )
-		TFA_BALLISTICS.WindSpeed = windspeed
 	end)
 
 	surface.CreateFont( "TFA_BALLISTICS_Font", {

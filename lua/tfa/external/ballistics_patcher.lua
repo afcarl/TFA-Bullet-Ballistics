@@ -1,7 +1,7 @@
 TFA_BALLISTICS = TFA_BALLISTICS or {}
 
 local blacklisted = {
-	-- ["classname"] = true, -- only useful for things that are REALLY broken
+	["tfa_ins2_codol_free"] = true,
 }
 
 local newbase = "tfa_ballistic_base"
@@ -21,6 +21,11 @@ local function PatchTFAWeapons()
 
 		wep.Base = newbase
 
+		local velocity = TFA_BALLISTICS.AmmoVelocity[ table.KeyFromValue( TFA_BALLISTICS.AmmoNames, wep.Primary.Ammo ) ] or 500
+
+		wep.Primary.Velocity = velocity
+
+		/*
 		if not wep.Primary.Velocity then -- trying to autodetect velocity, probably needs improvements
 			if wep.Primary.ProjectileVelocity and wep.Primary.ProjectileVelocity > 0 then
 				wep.Primary.Velocity = wep.Primary.ProjectileVelocity
@@ -32,8 +37,13 @@ local function PatchTFAWeapons()
 				wep.Primary.Velocity = 500
 			end
 		end
+		*/
 
-		if SERVER then print("[TFA Ballistics] Patched ".. regtbl.ClassName) end
+		if SERVER and velocity != nil then
+			print("[TFA Ballistics] Patched " .. regtbl.ClassName .. ", velocity is " .. tostring( velocity ))
+		elseif SERVER then
+			print("[TFA Ballistics] Patched " .. regtbl.ClassName .. ", velocity is " .. "500")
+		end
 	end
 end
 

@@ -2,7 +2,6 @@ SWEP.Base = "tfa_gun_base"
 
 DEFINE_BASECLASS(SWEP.Base)
 
-SWEP.Primary.Velocity = 500
 SWEP.EnableTracer = true
 SWEP.TracerColor = Color( 255, 0, 0 )
 
@@ -122,12 +121,6 @@ function SWEP:ImpactEffectFunc(pos, normal, mattype)
 			util.Effect(self.ImpactEffect, fx)
 		end
 	end
-end
-
-function SWEP:Initialize()
-	self.Primary.Velocity = 500
-	self.TracerEffect = "dax_bullettrail3_green"
-	BaseClass.Initialize( self )
 end
 
 function SWEP:DoImpactEffect()
