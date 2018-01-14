@@ -10,7 +10,7 @@ local cv_forcemult = GetConVar("sv_tfa_force_multiplier")
 
 function SWEP:ShootBullet(damage, recoil, num_bullets, aimcone, disablericochet, bulletoverride)
 	if not IsFirstTimePredicted() and not game.SinglePlayer() and not CLIENT then return end
-
+	
 	if self:GetStat("Primary.Projectile") then
 		return BaseClass.ShootBullet(self, damage, recoil, num_bullets, aimcone, disablericochet, bulletoverride)
 	end

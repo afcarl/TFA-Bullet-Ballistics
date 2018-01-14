@@ -79,7 +79,7 @@ if SERVER then
 		end
 
 	end)
-
+	
 	TFA_BALLISTICS.Simulate = function( bullet )
 
 		if not IsFirstTimePredicted() then return end
