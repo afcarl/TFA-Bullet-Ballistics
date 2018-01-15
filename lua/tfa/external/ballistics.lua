@@ -39,14 +39,16 @@ TFA_BALLISTICS.AddBullet = function( damage, velocity, pos, dir, owner, ang, wea
 
 	if SERVER then
 		local bulletent
-
-		bulletent = ents.Create("tfa_ballistic_bullet")
-		bulletent:SetPos( pos )
-		bulletent:SetAngles( ang )
-		bulletent:SetOwner( owner )
-		bulletent.InitialPos = pos
-		bulletent.Color = tracercolor
-		bulletent:Spawn()
+		
+		if tracerenabled then
+			bulletent = ents.Create("tfa_ballistic_bullet")
+			bulletent:SetPos( pos )
+			bulletent:SetAngles( ang )
+			bulletent:SetOwner( owner )
+			bulletent.InitialPos = pos
+			bulletent.Color = tracercolor
+			bulletent:Spawn()
+		end
 
 		local bulletdata = {
 			["damage"] = damage,

@@ -17,7 +17,7 @@ end
 
 function ENT:Think()
 	if self.InitialPos:Distance( self:GetPos() ) > 1000 and not self.Locked then
-		util.SpriteTrail( self, 1, self.Color, false, 1, 0.5, 0.001, 1, "trails/smoke.vmt")
+		util.SpriteTrail( self, 1, self.Color, false, 0.75, 0.25, 0.001, 1, "trails/smoke.vmt")
 		self.Locked = true
 	end
 end

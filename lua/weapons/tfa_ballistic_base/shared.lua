@@ -3,7 +3,8 @@ SWEP.Base = "tfa_gun_base"
 DEFINE_BASECLASS(SWEP.Base)
 
 SWEP.EnableTracer = true
-SWEP.TracerColor = Color( 255, 0, 0 )
+SWEP.TracerColor = Color( 255, 245, 135, 180 )
+SWEP.Primary.Velocity = 0
 
 local TracerName
 local cv_forcemult = GetConVar("sv_tfa_force_multiplier")
@@ -20,9 +21,15 @@ function SWEP:ShootBullet(damage, recoil, num_bullets, aimcone, disablericochet,
 
 
 	if self.Owner:GetShootPos():Distance( self.Owner:GetEyeTrace().HitPos ) >= 1000 then
+		if self.Primary.Ammo == "buckshot" then
+			self.EnableTracer = false
+		end
 		for i = 1, num_bullets do
+			
+			self.Primary.Velocity = math.random( TFA_BALLISTICS.AmmoVelocity[ table.KeyFromValue( TFA_BALLISTICS.AmmoNames, wep.Primary.Ammo ) ] - 20, TFA_BALLISTICS.AmmoVelocity[ table.KeyFromValue( TFA_BALLISTICS.AmmoNames, wep.Primary.Ammo ) ] + 20 ) or 500
+			
 			local velocity = self:GetStat("Primary.Velocity")
-
+			
 			local angles = self.Owner:EyeAngles()
 
 			angles:RotateAroundAxis( angles:Right(), ( -aimcone / 2 + math.Rand(0, aimcone) ) * 90)
