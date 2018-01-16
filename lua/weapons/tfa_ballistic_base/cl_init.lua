@@ -87,6 +87,8 @@ local whitemat = CreateMaterial( "tfa_ballistics_nocull", "UnlitGeneric", {
 function SWEP:DrawHUD()
 	BaseClass.DrawHUD( self )
 
+	if TFA_BALLISTICS.Blacklisted[self:GetClass()] then return end
+
 	if StormFox and GetConVar( "tfa_ballistics_windinfo" ):GetInt() != 0 then
 		draw.NoTexture()
 

@@ -2,29 +2,14 @@ TFA_BALLISTICS = TFA_BALLISTICS or {}
 
 TFA_BALLISTICS.Bullets = TFA_BALLISTICS.Bullets or {}
 
-TFA_BALLISTICS.AmmoNames = {}
+TFA_BALLISTICS.AmmoTypes = TFA_BALLISTICS.AmmoTypes or {}
 
-TFA_BALLISTICS.AmmoVelocity = {}
-
-TFA_BALLISTICS.RegisterAmmoType = function( ammotype, velocity )
-	if isstring( ammotype ) then
-		table.insert( TFA_BALLISTICS.AmmoNames, ammotype )
-	else
-		Error( "[TFA Ballistics] Error registering ammotype UNKNOWN, ammotype must be a string. \n" )
-	end
-	if isnumber( velocity ) then
-		table.insert( TFA_BALLISTICS.AmmoVelocity, velocity )
-	else
-		Error( "[TFA Ballistics] Error registering ammotype " .. ammotype .. ", velocity must be a number. \n" )
-	end
-end
-
-TFA_BALLISTICS.RegisterAmmoType( "pistol", 350 )
-TFA_BALLISTICS.RegisterAmmoType( "357", 466 )
-TFA_BALLISTICS.RegisterAmmoType( "smg1", 450 )
-TFA_BALLISTICS.RegisterAmmoType( "ar2", 600 )
-TFA_BALLISTICS.RegisterAmmoType( "buckshot", 400 )
-TFA_BALLISTICS.RegisterAmmoType( "SniperPenetratedRound", 760 )
+TFA_BALLISTICS.AmmoTypes["pistol"] = 350
+TFA_BALLISTICS.AmmoTypes["357"] = 466
+TFA_BALLISTICS.AmmoTypes["smg1"] = 450
+TFA_BALLISTICS.AmmoTypes["ar2"] = 600
+TFA_BALLISTICS.AmmoTypes["buckshot"] = 400
+TFA_BALLISTICS.AmmoTypes["SniperPenetratedRound"] = 760
 
 if not ConVarExists( "tfa_ballistics_windinfo" ) then
 	local convarflags = {

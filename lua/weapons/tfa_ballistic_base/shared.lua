@@ -11,25 +11,28 @@ local cv_forcemult = GetConVar("sv_tfa_force_multiplier")
 
 function SWEP:ShootBullet(damage, recoil, num_bullets, aimcone, disablericochet, bulletoverride)
 	if not IsFirstTimePredicted() and not game.SinglePlayer() and not CLIENT then return end
-	
-	if self:GetStat("Primary.Projectile") then
+
+	if TFA_BALLISTICS.Blacklisted[self:GetClass()] or self:GetStat("Primary.Projectile") then
 		return BaseClass.ShootBullet(self, damage, recoil, num_bullets, aimcone, disablericochet, bulletoverride)
 	end
 
 	num_bullets = num_bullets or 1
 	aimcone = aimcone or 0
 
+	if self:GetStat("Primary.Velocity") <= 0 then
+		local ammovel = TFA_BALLISTICS.AmmoTypes[self:GetStat("Primary.Ammo")] or 500
+		self.Primary.Velocity = ammovel + math.random(-20, 20)
+		self:ClearStatCache()
+	end
 
 	if self.Owner:GetShootPos():Distance( self.Owner:GetEyeTrace().HitPos ) >= 1000 then
 		if self.Primary.Ammo == "buckshot" then
 			self.EnableTracer = false
 		end
+
 		for i = 1, num_bullets do
-			
-			self.Primary.Velocity = math.random( TFA_BALLISTICS.AmmoVelocity[ table.KeyFromValue( TFA_BALLISTICS.AmmoNames, wep.Primary.Ammo ) ] - 20, TFA_BALLISTICS.AmmoVelocity[ table.KeyFromValue( TFA_BALLISTICS.AmmoNames, wep.Primary.Ammo ) ] + 20 ) or 500
-			
 			local velocity = self:GetStat("Primary.Velocity")
-			
+
 			local angles = self.Owner:EyeAngles()
 
 			angles:RotateAroundAxis( angles:Right(), ( -aimcone / 2 + math.Rand(0, aimcone) ) * 90)
