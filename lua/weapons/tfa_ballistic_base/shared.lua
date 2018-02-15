@@ -29,17 +29,3 @@ function SWEP:ShootBullet(damage, recoil, num_bullets, aimcone, disablericochet,
 		return BaseClass.ShootBullet(self, damage, recoil, num_bullets, aimcone, disablericochet, bulletoverride)
 	end
 end
-
-function SWEP:DoImpactEffect(tr, dmgtype)
-	if tr.HitSky then return true end
-	local ib = self.BashBase and IsValid(self) and self:GetBashing()
-	local dmginfo = DamageInfo()
-	dmginfo:SetDamageType(dmgtype)
-
-	if ib and self.Secondary.BashDamageType == DMG_GENERIC then return true end
-	if ib then return end
-
-	if IsValid(self) then
-		self:ImpactEffectFunc(tr.HitPos, tr.HitNormal, tr.MatType)
-	end
-end

@@ -52,9 +52,7 @@ TFA_BALLISTICS.AddBullet = function( damage, velocity, pos, dir, owner, ang, wea
 end
 
 if SERVER then
-	util.AddNetworkString( "TFA_BALLISTICS_DoImpact" )
-	util.AddNetworkString( "TFA_BALLISTICS_AddBullet" )
-
+	
 	hook.Add( "Tick", "TFA_BALLISTICS_Tick", function()
 
 		for key, bullet in pairs( TFA_BALLISTICS.Bullets ) do
@@ -210,16 +208,6 @@ else
 		pitch = { 95, 110 },
 		sound = cracksounds
 	} )
-
-	net.Receive( "TFA_BALLISTICS_DoImpact", function ()
-		local weapon = net.ReadEntity()
-		local hitpos = net.ReadVector()
-		local hitnormal = net.ReadVector()
-		local mattype = net.ReadInt( 32 )
-		if weapon.ImpactEffectFunc then
-			weapon:ImpactEffectFunc( hitpos, hitnormal, mattype )
-		end
-	end)
 
 	surface.CreateFont( "TFA_BALLISTICS_Font", {
 		font = "Roboto Condensed",
