@@ -167,13 +167,6 @@ if SERVER then
 
 		util.Decal( MatTypeToDecal( mattype ), hitpos + hitnormal, hitpos - hitnormal)
 
-		net.Start( "TFA_BALLISTICS_DoImpact" )
-			net.WriteEntity( bullet["weapon"] )
-			net.WriteVector( hitpos )
-			net.WriteVector( hitnormal )
-			net.WriteInt( mattype, 32 )
-		net.Broadcast()
-
 		if IsValid( bullet["ent"] ) then
 			bullet["ent"]:StopParticles()
 			SafeRemoveEntity( bullet["ent"] )
