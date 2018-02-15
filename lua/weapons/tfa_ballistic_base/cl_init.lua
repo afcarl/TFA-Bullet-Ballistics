@@ -89,7 +89,7 @@ function SWEP:DrawHUD()
 
 	if TFA_BALLISTICS.Blacklisted[self:GetClass()] then return end
 
-	if StormFox and GetConVar( "tfa_ballistics_windinfo" ):GetInt() != 0 then
+	if StormFox and GetConVar( "sv_tfa_ballistics_windinfo" ):GetInt() != 0 then
 		draw.NoTexture()
 
 		surface.SetDrawColor( 26, 26, 26, 150 )
