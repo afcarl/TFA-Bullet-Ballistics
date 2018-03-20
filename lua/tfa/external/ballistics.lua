@@ -25,16 +25,7 @@ end
 TFA_BALLISTICS.AddBullet = function( damage, velocity, pos, dir, owner, ang, weapon )
 
 	if SERVER then
-		local bulletent
 		
-		bulletent = ents.Create("tfa_ballistic_bullet")
-		bulletent:SetPos( pos )
-		bulletent:SetAngles( ang )
-		bulletent:SetOwner( owner )
-		bulletent:SetNWVector( "InitalPos", pos)
-		bulletent:Spawn()
-		
-
 		local bulletdata = {
 			["damage"] = damage,
 			["velocity"] = velocity,
@@ -45,17 +36,20 @@ TFA_BALLISTICS.AddBullet = function( damage, velocity, pos, dir, owner, ang, wea
 			["ent"] = bulletent,
 			["lifetime"] = 0
 		}
-
+		
 		table.insert( TFA_BALLISTICS.Bullets, bulletdata )
+		
 	end
 
 end
 
 if SERVER then
 	
-	hook.Add( "Tick", "TFA_BALLISTICS_Tick", function()
+	util.AddNetworkString( "TFA_BALLISTICS_DoImpact" )
+	
+	hook.Add( "Think", "TFA_BALLISTICS_Tick", function()
 
-		for key, bullet in pairs( TFA_BALLISTICS.Bullets ) do
+		for key, bullet in ipairs( TFA_BALLISTICS.Bullets ) do
 			TFA_BALLISTICS.Simulate( bullet )
 		end
 
@@ -70,16 +64,25 @@ if SERVER then
 			return false
 		end
 		
-		local styleint = math.Clamp( GetConVar("sv_tfa_ballistics_style"):GetInt(), 1, 3 )
+		if not IsValid( bullet["ent"] ) then
+			bullet["ent"] = ents.Create("tfa_ballistic_bullet")
+			bullet["ent"]:SetPos( bullet["pos"] )
+			bullet["ent"]:SetAngles( bullet["dir"]:Angle() )
+			bullet["ent"]:SetOwner( bullet["owner"] )
+			bullet["ent"]:SetNWVector( "InitalPos", bullet["pos"] )
+			bullet["ent"]:Spawn()
+		end
+		
+		local styleint = math.Clamp( GetConVar( "sv_tfa_ballistics_style" ):GetInt(), 1, 3 )
 		
 		bullet["lifetime"] = bullet["lifetime"] + ( ( 0.1 * game.GetTimeScale() ) )
 
 		bullet["damage"] = bullet["damage"] * 0.9875
 
 		local sourcevelocity = ( bullet["velocity"] * 3.28084 * 12 / 0.75 )
-		local grav_vec = Vector( 0, 0, GetConVarNumber("sv_gravity") )
+		local grav_vec = Vector( 0, 0, GetConVarNumber("sv_gravity") ) * 3.28084 * 12
 		local velocity = bullet["dir"] * sourcevelocity
-		local finalvelocity = ( velocity - ( (grav_vec * 3.28084 * 12) * bullet["lifetime"] ) * FrameTime() / 2 ) / styleint
+		local finalvelocity = ( velocity - ( grav_vec * bullet["lifetime"] ) * FrameTime() / 2 ) / styleint
 
 		local windspeed
 		local windangle
@@ -96,7 +99,7 @@ if SERVER then
 		local finalpos = bullet["pos"] + ( finalvelocity + ( windangle:Forward() * windspeed ) ) * FrameTime()
 		
 		if IsValid( bullet["ent"] ) then
-			bullet["ent"]:SetPos( finalpos )
+			bullet["ent"]:SetPos( finalpos + ( finalvelocity + ( windangle:Forward() * windspeed ) ) * FrameTime() )
 			bullet["ent"]:SetAngles( finalvelocity:Angle() )
 		end
 		
@@ -166,7 +169,16 @@ if SERVER then
 		bullet["weapon"]:GetOwner():FireBullets( bullet["weapon"].MainBullet )
 
 		util.Decal( MatTypeToDecal( mattype ), hitpos + hitnormal, hitpos - hitnormal)
-
+		
+		local hitnormalnew = bullet["dir"] * -1
+		
+		net.Start( "TFA_BALLISTICS_DoImpact" )
+			net.WriteEntity( bullet["weapon"] )
+			net.WriteVector( hitpos )
+			net.WriteVector( hitnormalnew )
+			net.WriteInt( mattype, 32 )
+		net.Broadcast()
+		
 		if IsValid( bullet["ent"] ) then
 			bullet["ent"]:StopParticles()
 			SafeRemoveEntity( bullet["ent"] )
@@ -177,7 +189,9 @@ if SERVER then
 		end )
 
 	end
+	
 else
+	
 	local function genOrderedTbl(str, min, max)
 		if not min then min = 1 end
 		if not max then
@@ -208,4 +222,15 @@ else
 		weight = 500,
 		antialias = true,
 	} )
+	
+	net.Receive( "TFA_BALLISTICS_DoImpact", function ()
+		local weapon = net.ReadEntity()
+		local hitpos = net.ReadVector()
+		local hitnormal = net.ReadVector()
+		local mattype = net.ReadInt( 32 )
+		if weapon.ImpactEffectFunc then
+			weapon:ImpactEffectFunc( hitpos, hitnormal, mattype )
+		end
+	end)
+	
 end

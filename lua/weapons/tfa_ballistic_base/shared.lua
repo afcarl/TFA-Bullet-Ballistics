@@ -26,6 +26,14 @@ function SWEP:ShootBullet(damage, recoil, num_bullets, aimcone, disablericochet,
 			TFA_BALLISTICS.AddBullet( damage, self.Primary.Velocity, self.Owner:GetShootPos(), angles:Forward(), self.Owner, self.Owner:GetAngles(), self )
 		end
 	else
+		self.TracerName = "NoTracer"
+		if CLIENT or game.SinglePlayer() then
+			self:ImpactEffectFunc( self.Owner:GetEyeTrace().HitPos, self.Owner:EyeAngles():Forward() * -1, self.Owner:GetEyeTrace().MatType )
+		end
 		return BaseClass.ShootBullet(self, damage, recoil, num_bullets, aimcone, disablericochet, bulletoverride)
 	end
+end
+
+function SWEP:DoImpactEffect(tr, dmgtype)
+	
 end
