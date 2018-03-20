@@ -28,12 +28,11 @@ function ENT:Draw()
       
       render.SetMaterial( self.TracerGlowMat )
       
-      if self:GetPos():Distance( self.InitalPos ) > 100 then
+      if self:GetPos():Distance( self.InitalPos ) > 250 then
             self.TracerAlpha = math.Clamp( self.TracerAlpha + ( FrameTime() * 200 ), 0, 255)
             self.TracerSize = math.Clamp( self.TracerSize + ( FrameTime() * 5 ), 1, 100)
+            render.DrawSprite( self:GetPos(), self.TracerSize, self.TracerSize, Color(244, 140, 66, self.TracerAlpha) )
       end
-      
-      render.DrawSprite( self:GetPos(), self.TracerSize, self.TracerSize, Color(244, 140, 66, self.TracerAlpha) )
       
 end
 

@@ -99,7 +99,7 @@ if SERVER then
 		local finalpos = bullet["pos"] + ( finalvelocity + ( windangle:Forward() * windspeed ) ) * FrameTime()
 		
 		if IsValid( bullet["ent"] ) then
-			bullet["ent"]:SetPos( finalpos + ( finalvelocity + ( windangle:Forward() * windspeed ) ) * FrameTime() )
+			bullet["ent"]:SetPos( finalpos )
 			bullet["ent"]:SetAngles( finalvelocity:Angle() )
 		end
 		
